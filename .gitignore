@@ -4,3 +4,5 @@ anki_data/*
 
 # But don't ignore these specific files
 !anki_data/.gitkeep
+
+*.lpk

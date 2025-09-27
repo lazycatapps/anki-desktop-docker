@@ -146,3 +146,22 @@ This sets up:
 * **9:00 UTC** — Backup
 * **10:00 & 22:00 UTC** — Cleanup
 
+---
+
+## License
+
+This repository contains code from multiple sources with different licensing terms. See the [LICENSE](LICENSE) file for complete details.
+
+### Licensing Summary
+
+- **Original Code**: Forked from [mlcivilengineer/anki-desktop-docker](https://github.com/mlcivilengineer/anki-desktop-docker) - license status undetermined
+- **LazyCAT Apps Contributions**: Licensed under MIT License (CJK support, Anki v25.09 upgrade, improvements)
+- **Anki Software**: Licensed under AGPL3
+- **Base Docker Image**: linuxserver/docker-baseimage-kasmvnc (see their repository for terms)
+
+### Legal Disclaimer
+
+- This project is not affiliated with or endorsed by the Anki project or its developers
+- This is an independent containerization tool created to simplify Anki deployment
+- Users are responsible for complying with all applicable licenses when using this software
+- The original code's license terms remain undetermined pending clarification from upstream

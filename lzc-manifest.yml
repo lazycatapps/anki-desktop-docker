@@ -1,0 +1,106 @@
+# app 的唯一 id,上架到商店需要保证不要冲突,尽量使用开发者自己的域名作为后缀.
+package: cloud.lazycat.app.anki
+# app 的版本
+version: 0.0.1
+
+# 软件名称,会显示在启动器之类的地方
+name: Anki
+keyword: anki
+description: Anki 桌面客户端
+detail: |
+  ## Anki 桌面客户端
+
+  Anki‌ 是一个记忆辅助软件，它通过模仿纸质卡片的形式，帮助用户记忆和复习知识。Anki 的核心功能是基于艾宾浩斯遗忘曲线，通过科学的记忆方法帮助用户对抗遗忘，提高记忆效率。
+
+  本应用提供了完整的 Anki 桌面客户端环境，支持创建、编辑和学习卡片，以及插件扩展功能。
+
+  ## 主要功能
+
+  - 📚 创建和管理记忆卡片
+  - 🧠 基于间隔重复算法的智能复习
+  - 🎨 丰富的卡片模板和样式自定义
+  - 🔌 支持 AnkiConnect 插件接口
+  - 📊 详细的学习统计和进度追踪
+  - 🌐 支持多语言，包含中文界面
+  - 📱 可与 AnkiWeb 同步数据
+  - 🔒 支持与平台的 Anki Sync Server 集成，确保数据不离开微服
+
+  ## 首次使用安装说明（重要）
+
+  **注意：应用在第一次使用时需要安装指定的 Anki 客户端版本，需要完成以下初始化操作才能正常使用！**
+
+  **建议第一次在电脑端进行初始化，可以通过键盘便捷的输入下面的序号。如果是手机端，需要通过 KasmVNC 侧边栏的 Keys 来完成输入。**
+
+  1. 启动应用后，会进入 Anki 安装向导
+  2. 输入 `7` （Download mirror: off）用于设置下载源
+  3. 输入 `2` （选择 China 源） **由于国内网络的特殊性，未设置该源大概率会导致应用下载失败，此步骤非常重要！**
+  4. 输入 `1` 或直接回车 （安装 Latest Anki）
+  5. 等待应用下载完成（如果遇到网络错误，可以通过重启应用来重试安装）
+  6. 待提示 "Press enter to start Anki." 后，按回车即可正式进入 Anki 客户端界面
+
+  ## 使用方法
+
+  1. 完成初始化安装后，通过网页访问 Anki 桌面客户端
+  2. 创建新的卡片组或导入现有卡片（没有牌组数据可以自己创建或点击「获取牌组」下载：https://ankiweb.net/shared/decks）
+  3. 开始学习和复习卡片
+  4. 可通过 AnkiConnect (端口 8765) 与其他应用集成
+  5. 配置 Anki Sync Server 进行数据同步
+
+  ## 注意事项
+
+  - 建议定期备份重要的卡片数据
+  - 首次使用时可导入共享卡片组进行体验
+  - 支持导入导出 .apkg 格式的卡片包
+  - 可以通过 KasmVNC 顶部的菜单，完成文件的上传下载，便于在 Anki 中导入、导出卡片
+  - 数据存储在本地，确保隐私安全
+
+  ## 特性
+
+  - 🔄 **多端数据同步**：多个设备使用同一份数据，无需在每个设备都安装并维护 Anki 客户端及卡片数据
+  - 📱 **iOS 用户友好**：iOS 设备用户可以先通过此应用体验 Anki 的完整功能，确认需要后再在 App Store 购买官方应用
+  - ☁️ **云端便携**：随时随地通过浏览器访问您的学习数据，不受设备限制
+  - 💾 **统一管理**：所有学习进度、统计数据和设置在一个地方集中管理
+
+  ## 已知问题
+
+  - ⚠️ **单用户限制**：该应用实例同时只能被一个用户使用，因为 Anki 客户端只有一个运行实例
+  - 👥 **多账号解决方案**：虽然存在单用户限制，但 Anki 应用本身支持多账号功能，不同用户可以创建不同的账号来避免数据互相影响
+  - 🔄 **并发访问**：如果多人同时访问，可能会出现操作冲突，建议协调使用时间
+
+# 软件本身的 license
+license: https://choosealicense.com/licenses/mit/
+
+# 软件的主页,会在商店等地方体现
+homepage: https://github.com/mlcivilengineer/anki-desktop-docker
+
+# lpk 的作者,会在商店等地方体现
+author: l-qing
+
+# application 作为一个特殊的 container 运行，对应的 service 名称为固定的`app`， 其他 service 可以通过此名称与 app 进行通讯
+application:
+  #是否存在后台任务， 若存在则系统不会对此 app 进行主动休眠等操作
+  background_task: false
+
+  # 期望的 app 域名，如果系统中已经有对应域名则会提示用户选择其他域名。 最终 app 分配到的域名以/lzcapp/run/app.subdomain 为准
+  subdomain: anki
+
+  routes:
+    - /=http://anki.cloud.lazycat.app.anki.lzcapp:3000
+
+  depends_on:
+    - anki
+
+  ingress:
+    - protocol: tcp
+      port: 8765
+      # AnkiConnect addon
+      service: anki
+
+  # 是否启用多实例
+  multi_instance: false
+
+services:
+  anki:
+    image: ##IMAGE_PLACEHOLDER##
+    binds:
+      - /lzcapp/var/data:/config
