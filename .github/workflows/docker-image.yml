@@ -3,9 +3,15 @@ name: Build & Push (Docker Hub)
 on:
   push:
     branches: [ "lazycat-main" ]
+    paths:
+      - 'Dockerfile'
+      - 'root/**'
     tags: [ "v[0-9]+.[0-9]+.[0-9]+-lazycat" ]
   pull_request:
     branches: [ "lazycat-main" ]
+    paths:
+      - 'Dockerfile'
+      - 'root/**'
   workflow_dispatch:
 
 jobs:

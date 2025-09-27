@@ -92,11 +92,14 @@ jobs:
 
       # Copy Docker image from Docker Hub to Lazycat registry
       - name: Copy Docker image to Lazycat
+        env:
+          LANG: en_US.UTF-8
+          LC_ALL: en_US.UTF-8
         run: |
           echo "Copying Docker image: ${{ steps.docker-info.outputs.full_image }}"
 
           # Execute copy command and save output while displaying to console
-          lzc-cli appstore copy-image ${{ steps.docker-info.outputs.full_image }} | tee /tmp/copy_output.log
+          lzc-cli appstore copy-image ${{ steps.docker-info.outputs.full_image }} > /tmp/copy_output.log
 
           # Extract the final Lazycat image URL from the command output
           # Remove ANSI escape sequences using col -b and extract the last word
@@ -155,6 +158,10 @@ jobs:
 
       # Build the LPK package and publish to Lazycat App Store
       - name: Build and publish LPK
+        env:
+          # Set locale to avoid potential encoding issues
+          LANG: en_US.UTF-8
+          LC_ALL: en_US.UTF-8
         run: |
           # Build the LPK package using Lazycat CLI
           lzc-cli project build
@@ -172,7 +179,17 @@ jobs:
           fi
 
           # Publish the built LPK package to Lazycat App Store
+          # Capture output and exit code to preserve error information
+          set +e  # Don't exit on error immediately
           lzc-cli appstore publish ./*.lpk -c "$SUBMIT_MSG"
+          PUBLISH_EXIT_CODE=$?
+          set -e  # Resume exit on error
+
+          if [ $PUBLISH_EXIT_CODE -ne 0 ]; then
+            echo "❌ LPK package publish failed with exit code: $PUBLISH_EXIT_CODE"
+            exit $PUBLISH_EXIT_CODE
+          fi
+          echo "✅ LPK package published successfully!"
 
       # Get the generated LPK filename for artifact naming
       - name: Get LPK filename
