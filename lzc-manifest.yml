@@ -1,71 +1,135 @@
 # app 的唯一 id,上架到商店需要保证不要冲突,尽量使用开发者自己的域名作为后缀.
-package: cloud.lazycat.app.anki
+package: cloud.lazycat.app.liu.anki
 # app 的版本
 version: 0.0.1
 
 # 软件名称,会显示在启动器之类的地方
-name: Anki
-keyword: anki
-description: Anki 桌面客户端
-detail: |
-  ## Anki 桌面客户端
+locales:
+  zh:
+    name: Anki 客户端
+    description: Anki 记忆辅助软件的桌面客户端
+    usage: |
+      ## Anki 桌面客户端
 
-  Anki‌ 是一个记忆辅助软件，它通过模仿纸质卡片的形式，帮助用户记忆和复习知识。Anki 的核心功能是基于艾宾浩斯遗忘曲线，通过科学的记忆方法帮助用户对抗遗忘，提高记忆效率。
+      Anki‌ 是一个记忆辅助软件，它通过模仿纸质卡片的形式，帮助用户记忆和复习知识。Anki 的核心功能是基于艾宾浩斯遗忘曲线，通过科学的记忆方法帮助用户对抗遗忘，提高记忆效率。
 
-  本应用提供了完整的 Anki 桌面客户端环境，支持创建、编辑和学习卡片，以及插件扩展功能。
+      本应用提供了完整的 Anki 桌面客户端环境，支持创建、编辑和学习卡片，以及插件扩展功能。
 
-  ## 主要功能
+      ## 主要功能
 
-  - 📚 创建和管理记忆卡片
-  - 🧠 基于间隔重复算法的智能复习
-  - 🎨 丰富的卡片模板和样式自定义
-  - 🔌 支持 AnkiConnect 插件接口
-  - 📊 详细的学习统计和进度追踪
-  - 🌐 支持多语言，包含中文界面
-  - 📱 可与 AnkiWeb 同步数据
-  - 🔒 支持与平台的 Anki Sync Server 集成，确保数据不离开微服
+      - 📚 创建和管理记忆卡片
+      - 🧠 基于间隔重复算法的智能复习
+      - 🎨 丰富的卡片模板和样式自定义
+      - 🔌 支持 AnkiConnect 插件接口
+      - 📊 详细的学习统计和进度追踪
+      - 🌐 支持多语言，包含中文界面
+      - 📱 可与 AnkiWeb 同步数据
+      - 🔒 支持与平台的 Anki Sync Server 集成，确保数据不离开微服
 
-  ## 首次使用安装说明（重要）
+      ## 首次使用安装说明（重要）
 
-  **注意：应用在第一次使用时需要安装指定的 Anki 客户端版本，需要完成以下初始化操作才能正常使用！**
+      **注意：应用在第一次使用时需要安装指定的 Anki 客户端版本，需要完成以下初始化操作才能正常使用！**
 
-  **建议第一次在电脑端进行初始化，可以通过键盘便捷的输入下面的序号。如果是手机端，需要通过 KasmVNC 侧边栏的 Keys 来完成输入。**
+      **建议第一次在电脑端进行初始化，可以通过键盘便捷的输入下面的序号。如果是手机端，需要通过 KasmVNC 侧边栏的 Keys 来完成输入。**
 
-  1. 启动应用后，会进入 Anki 安装向导
-  2. 输入 `7` （Download mirror: off）用于设置下载源
-  3. 输入 `2` （选择 China 源） **由于国内网络的特殊性，未设置该源大概率会导致应用下载失败，此步骤非常重要！**
-  4. 输入 `1` 或直接回车 （安装 Latest Anki）
-  5. 等待应用下载完成（如果遇到网络错误，可以通过重启应用来重试安装）
-  6. 待提示 "Press enter to start Anki." 后，按回车即可正式进入 Anki 客户端界面
+      1. 启动应用后，会进入 Anki 安装向导
+      2. 输入 `7` （Download mirror: off）用于设置下载源
+      3. 输入 `2` （选择 China 源） **由于国内网络的特殊性，未设置该源大概率会导致应用下载失败，此步骤非常重要！**
+      4. 输入 `1` 或直接回车 （安装 Latest Anki）
+      5. 等待应用下载完成（如果遇到网络错误，可以通过重启应用来重试安装）
+      6. 待提示 "Press enter to start Anki." 后，按回车即可正式进入 Anki 客户端界面
 
-  ## 使用方法
+      ## 使用方法
 
-  1. 完成初始化安装后，通过网页访问 Anki 桌面客户端
-  2. 创建新的卡片组或导入现有卡片（没有牌组数据可以自己创建或点击「获取牌组」下载：https://ankiweb.net/shared/decks）
-  3. 开始学习和复习卡片
-  4. 可通过 AnkiConnect (端口 8765) 与其他应用集成
-  5. 配置 Anki Sync Server 进行数据同步
+      1. 完成初始化安装后，通过网页访问 Anki 桌面客户端
+      2. 创建新的卡片组或导入现有卡片（没有牌组数据可以自己创建或点击「获取牌组」下载：https://ankiweb.net/shared/decks）
+      3. 开始学习和复习卡片
+      4. 可通过 AnkiConnect (端口 8765) 与其他应用集成
+      5. 配置 Anki Sync Server 进行数据同步
 
-  ## 注意事项
+      ## 注意事项
 
-  - 建议定期备份重要的卡片数据
-  - 首次使用时可导入共享卡片组进行体验
-  - 支持导入导出 .apkg 格式的卡片包
-  - 可以通过 KasmVNC 顶部的菜单，完成文件的上传下载，便于在 Anki 中导入、导出卡片
-  - 数据存储在本地，确保隐私安全
+      - 建议定期备份重要的卡片数据
+      - 首次使用时可导入共享卡片组进行体验
+      - 支持导入导出 .apkg 格式的卡片包
+      - 可以通过 KasmVNC 顶部的菜单，完成文件的上传下载，便于在 Anki 中导入、导出卡片
+      - 数据存储在本地，确保隐私安全
 
-  ## 特性
+      ## 特性
 
-  - 🔄 **多端数据同步**：多个设备使用同一份数据，无需在每个设备都安装并维护 Anki 客户端及卡片数据
-  - 📱 **iOS 用户友好**：iOS 设备用户可以先通过此应用体验 Anki 的完整功能，确认需要后再在 App Store 购买官方应用
-  - ☁️ **云端便携**：随时随地通过浏览器访问您的学习数据，不受设备限制
-  - 💾 **统一管理**：所有学习进度、统计数据和设置在一个地方集中管理
+      - 🔄 **多端数据同步**：多个设备使用同一份数据，无需在每个设备都安装并维护 Anki 客户端及卡片数据
+      - 📱 **iOS 用户友好**：iOS 设备用户可以先通过此应用体验 Anki 的完整功能，确认需要后再在 App Store 购买官方应用
+      - ☁️ **云端便携**：随时随地通过浏览器访问您的学习数据，不受设备限制
+      - 💾 **统一管理**：所有学习进度、统计数据和设置在一个地方集中管理
 
-  ## 已知问题
+      ## 已知问题
 
-  - ⚠️ **单用户限制**：该应用实例同时只能被一个用户使用，因为 Anki 客户端只有一个运行实例
-  - 👥 **多账号解决方案**：虽然存在单用户限制，但 Anki 应用本身支持多账号功能，不同用户可以创建不同的账号来避免数据互相影响
-  - 🔄 **并发访问**：如果多人同时访问，可能会出现操作冲突，建议协调使用时间
+      - ⚠️ **单用户限制**：该应用实例同时只能被一个用户使用，因为 Anki 客户端只有一个运行实例
+      - 👥 **多账号解决方案**：虽然存在单用户限制，但 Anki 应用本身支持多账号功能，不同用户可以创建不同的账号来避免数据互相影响
+      - 🔄 **并发访问**：如果多人同时访问，可能会出现操作冲突，建议协调使用时间
+
+  en:
+    name: Anki
+    description: Desktop client for Anki, a powerful memory aid software.
+    usage: |
+      ## Anki Desktop Client
+
+      Anki is a memory aid software that helps users memorize and review knowledge by simulating the form of paper cards. Anki's core functionality is based on the Ebbinghaus forgetting curve, using scientific memory methods to help users combat forgetting and improve memory efficiency.
+
+      This application provides a complete Anki desktop client environment, supporting the creation, editing and learning of cards, as well as plugin extension functionality.
+
+      ## Main Features
+
+      - 📚 Create and manage memory cards
+      - 🧠 Smart review based on spaced repetition algorithm
+      - 🎨 Rich card templates and style customization
+      - 🔌 Support for AnkiConnect plugin interface
+      - 📊 Detailed learning statistics and progress tracking
+      - 🌐 Multi-language support, including Chinese interface
+      - 📱 Sync data with AnkiWeb
+      - 🔒 Support integration with platform's Anki Sync Server, ensuring data doesn't leave the micro-service
+
+      ## First-time Installation Instructions (Important)
+
+      **Note: The application needs to install the specified Anki client version on first use. You need to complete the following initialization operations before normal use!**
+
+      **It is recommended to perform initialization on desktop for the first time, as you can conveniently input the numbers below using the keyboard. If on mobile, you need to use the Keys from the KasmVNC sidebar to complete the input.**
+
+      1. After starting the application, you will enter the Anki installation wizard
+      2. Enter `7` (Download mirror: off) to set the download source
+      3. Enter `2` (Select China source) **Due to the special nature of domestic networks, not setting this source will most likely cause application download failure. This step is very important!**
+      4. Enter `1` or press Enter directly (Install Latest Anki)
+      5. Wait for the application to download (if you encounter network errors, you can restart the application to retry installation)
+      6. When prompted "Press enter to start Anki.", press Enter to officially enter the Anki client interface
+
+      ## Usage Instructions
+
+      1. After completing the initialization installation, access the Anki desktop client through web browser
+      2. Create new card decks or import existing cards (if you don't have deck data, you can create your own or click "Get Shared" to download: https://ankiweb.net/shared/decks)
+      3. Start learning and reviewing cards
+      4. Integrate with other applications through AnkiConnect (port 8765)
+      5. Configure Anki Sync Server for data synchronization
+
+      ## Notes
+
+      - It is recommended to regularly backup important card data
+      - You can import shared card decks for experience when using for the first time
+      - Supports importing and exporting .apkg format card packages
+      - You can upload and download files through the menu at the top of KasmVNC, making it convenient to import and export cards in Anki
+      - Data is stored locally, ensuring privacy and security
+
+      ## Features
+
+      - 🔄 **Multi-device Data Sync**: Multiple devices use the same data, no need to install and maintain Anki client and card data on each device
+      - 📱 **iOS User Friendly**: iOS device users can first experience the complete functionality of Anki through this application, and then purchase the official app on the App Store after confirmation
+      - ☁️ **Cloud Portable**: Access your learning data anytime, anywhere through a browser, not limited by devices
+      - 💾 **Unified Management**: All learning progress, statistical data and settings are centrally managed in one place
+
+      ## Known Issues
+
+      - ⚠️ **Single User Limitation**: This application instance can only be used by one user at a time, because the Anki client only has one running instance
+      - 👥 **Multi-account Solution**: Although there is a single user limitation, the Anki application itself supports multi-account functionality, different users can create different accounts to avoid data interference
+      - 🔄 **Concurrent Access**: If multiple people access at the same time, operation conflicts may occur, it is recommended to coordinate usage time
 
 # 软件本身的 license
 license: https://choosealicense.com/licenses/mit/
@@ -85,7 +149,7 @@ application:
   subdomain: anki
 
   routes:
-    - /=http://anki.cloud.lazycat.app.anki.lzcapp:3000
+    - /=http://anki.cloud.lazycat.app.liu.anki.lzcapp:3000
 
   depends_on:
     - anki

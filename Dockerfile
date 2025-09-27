@@ -1,5 +1,6 @@
 FROM lsiobase/kasmvnc:ubuntunoble
 
+# Set the commit ID for version tracking
 ARG commit_id=dev
 ENV COMMIT_ID=${commit_id}
 
