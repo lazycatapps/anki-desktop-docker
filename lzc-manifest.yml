@@ -7,8 +7,7 @@ version: 0.0.1
 locales:
   zh:
     name: Anki 客户端
-    description: Anki 记忆辅助软件的桌面客户端
-    usage: |
+    description: |
       ## Anki 桌面客户端
 
       Anki‌ 是一个记忆辅助软件，它通过模仿纸质卡片的形式，帮助用户记忆和复习知识。Anki 的核心功能是基于艾宾浩斯遗忘曲线，通过科学的记忆方法帮助用户对抗遗忘，提高记忆效率。
@@ -33,34 +32,19 @@ locales:
       **建议第一次在电脑端进行初始化，可以通过键盘便捷的输入下面的序号。如果是手机端，需要通过 KasmVNC 侧边栏的 Keys 来完成输入。**
 
       1. 启动应用后，会进入 Anki 安装向导
-      2. 输入 `7` （Download mirror: off）用于设置下载源
-      3. 输入 `2` （选择 China 源） **由于国内网络的特殊性，未设置该源大概率会导致应用下载失败，此步骤非常重要！**
-      4. 输入 `1` 或直接回车 （安装 Latest Anki）
+      2. 输入 `7` （Download mirror: off）
+      3. 输入 `2` （选择 China 源）
+      4. 输入 `1` 或直接回车
       5. 等待应用下载完成（如果遇到网络错误，可以通过重启应用来重试安装）
       6. 待提示 "Press enter to start Anki." 后，按回车即可正式进入 Anki 客户端界面
 
       ## 使用方法
 
-      1. 完成初始化安装后，通过网页访问 Anki 桌面客户端
+      1. 完成初始化安装后，通过客户端访问 Anki 桌面客户端
       2. 创建新的卡片组或导入现有卡片（没有牌组数据可以自己创建或点击「获取牌组」下载：https://ankiweb.net/shared/decks）
       3. 开始学习和复习卡片
       4. 可通过 AnkiConnect (端口 8765) 与其他应用集成
       5. 配置 Anki Sync Server 进行数据同步
-
-      ## 注意事项
-
-      - 建议定期备份重要的卡片数据
-      - 首次使用时可导入共享卡片组进行体验
-      - 支持导入导出 .apkg 格式的卡片包
-      - 可以通过 KasmVNC 顶部的菜单，完成文件的上传下载，便于在 Anki 中导入、导出卡片
-      - 数据存储在本地，确保隐私安全
-
-      ## 特性
-
-      - 🔄 **多端数据同步**：多个设备使用同一份数据，无需在每个设备都安装并维护 Anki 客户端及卡片数据
-      - 📱 **iOS 用户友好**：iOS 设备用户可以先通过此应用体验 Anki 的完整功能，确认需要后再在 App Store 购买官方应用
-      - ☁️ **云端便携**：随时随地通过浏览器访问您的学习数据，不受设备限制
-      - 💾 **统一管理**：所有学习进度、统计数据和设置在一个地方集中管理
 
       ## 已知问题
 
@@ -70,8 +54,7 @@ locales:
 
   en:
     name: Anki
-    description: Desktop client for Anki, a powerful memory aid software.
-    usage: |
+    description: |
       ## Anki Desktop Client
 
       Anki is a memory aid software that helps users memorize and review knowledge by simulating the form of paper cards. Anki's core functionality is based on the Ebbinghaus forgetting curve, using scientific memory methods to help users combat forgetting and improve memory efficiency.
@@ -96,34 +79,19 @@ locales:
       **It is recommended to perform initialization on desktop for the first time, as you can conveniently input the numbers below using the keyboard. If on mobile, you need to use the Keys from the KasmVNC sidebar to complete the input.**
 
       1. After starting the application, you will enter the Anki installation wizard
-      2. Enter `7` (Download mirror: off) to set the download source
-      3. Enter `2` (Select China source) **Due to the special nature of domestic networks, not setting this source will most likely cause application download failure. This step is very important!**
-      4. Enter `1` or press Enter directly (Install Latest Anki)
+      2. Enter `7` (Download mirror: off)
+      3. Enter `2` (Select China source)
+      4. Enter `1` or press Enter directly
       5. Wait for the application to download (if you encounter network errors, you can restart the application to retry installation)
       6. When prompted "Press enter to start Anki.", press Enter to officially enter the Anki client interface
 
       ## Usage Instructions
 
-      1. After completing the initialization installation, access the Anki desktop client through web browser
+      1. After completing the initialization installation, access the Anki desktop client through application
       2. Create new card decks or import existing cards (if you don't have deck data, you can create your own or click "Get Shared" to download: https://ankiweb.net/shared/decks)
       3. Start learning and reviewing cards
       4. Integrate with other applications through AnkiConnect (port 8765)
       5. Configure Anki Sync Server for data synchronization
-
-      ## Notes
-
-      - It is recommended to regularly backup important card data
-      - You can import shared card decks for experience when using for the first time
-      - Supports importing and exporting .apkg format card packages
-      - You can upload and download files through the menu at the top of KasmVNC, making it convenient to import and export cards in Anki
-      - Data is stored locally, ensuring privacy and security
-
-      ## Features
-
-      - 🔄 **Multi-device Data Sync**: Multiple devices use the same data, no need to install and maintain Anki client and card data on each device
-      - 📱 **iOS User Friendly**: iOS device users can first experience the complete functionality of Anki through this application, and then purchase the official app on the App Store after confirmation
-      - ☁️ **Cloud Portable**: Access your learning data anytime, anywhere through a browser, not limited by devices
-      - 💾 **Unified Management**: All learning progress, statistical data and settings are centrally managed in one place
 
       ## Known Issues
 
