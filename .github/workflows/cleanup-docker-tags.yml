@@ -1,0 +1,134 @@
+name: Cleanup Docker Hub Tags
+
+on:
+  # 每周日凌晨2点运行
+  schedule:
+    - cron: '0 2 * * 0'
+  # 允许手动触发
+  workflow_dispatch:
+    inputs:
+      keep_count:
+        description: 'Number of recent SHA tags to keep'
+        required: false
+        default: '10'
+        type: string
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+
+    # Security: Only run on main repository, not forks
+    if: github.repository_owner == 'lazycatapps'
+
+    steps:
+      - name: Cleanup old SHA tags
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+          REPO_NAME: ${{ github.repository }}
+        run: |
+          # 提取仓库名
+          REPO_NAME=${GITHUB_REPOSITORY#*/}
+
+          # 设置保留的标签数量
+          KEEP_COUNT=${{ inputs.keep_count || '10' }}
+
+          # 获取访问令牌
+          echo "Authenticating with Docker Hub..."
+          TOKEN=$(curl -s -H "Content-Type: application/json" -X POST \
+            -d '{"username": "'${DOCKERHUB_USERNAME}'", "password": "'${DOCKERHUB_TOKEN}'"}' \
+            https://hub.docker.com/v2/users/login/ | jq -r .token)
+
+          if [ "$TOKEN" = "null" ] || [ -z "$TOKEN" ]; then
+            echo "Failed to authenticate with Docker Hub"
+            exit 1
+          fi
+
+          echo "Authentication successful"
+
+          # 获取所有 SHA 标签（支持分页）
+          echo "Fetching tags for ${DOCKERHUB_USERNAME}/${REPO_NAME}..."
+          ALL_SHA_TAGS=""
+          PAGE=1
+
+          while true; do
+            RESPONSE=$(curl -s -H "Authorization: JWT ${TOKEN}" \
+              "https://hub.docker.com/v2/repositories/${DOCKERHUB_USERNAME}/${REPO_NAME}/tags/?page=${PAGE}&page_size=100")
+
+            # 检查 API 响应是否有效
+            if ! echo "$RESPONSE" | jq -e '.results' > /dev/null 2>&1; then
+              echo "Error: Invalid API response from Docker Hub"
+              exit 1
+            fi
+
+            # 提取当前页的 SHA 标签，按时间排序
+            PAGE_SHA_TAGS=$(echo "$RESPONSE" | jq -r '.results[] | select(.name | startswith("sha-")) | "\(.last_updated) \(.name)"')
+
+            if [ -z "$PAGE_SHA_TAGS" ]; then
+              break
+            fi
+
+            ALL_SHA_TAGS="${ALL_SHA_TAGS}${PAGE_SHA_TAGS}"$'\n'
+
+            # 检查是否还有下一页
+            NEXT_URL=$(echo "$RESPONSE" | jq -r '.next // empty')
+            if [ -z "$NEXT_URL" ] || [ "$NEXT_URL" = "null" ]; then
+              break
+            fi
+
+            PAGE=$((PAGE + 1))
+          done
+
+          # 移除空行并按时间排序（最新的在前）
+          SORTED_SHA_TAGS=$(echo "$ALL_SHA_TAGS" | grep -v '^$' | sort -r)
+
+          if [ -z "$SORTED_SHA_TAGS" ]; then
+            echo "No SHA tags found"
+            exit 0
+          fi
+
+          # 获取需要删除的标签（保留最新的KEEP_COUNT个）
+          TAGS_TO_DELETE=$(echo "$SORTED_SHA_TAGS" | tail -n +$((KEEP_COUNT + 1)) | awk '{print $2}')
+
+          if [ -z "$TAGS_TO_DELETE" ]; then
+            echo "No SHA tags to delete (keeping ${KEEP_COUNT} most recent)"
+            exit 0
+          fi
+
+          echo "Tags to delete:"
+          echo "$TAGS_TO_DELETE"
+
+          echo "Found $(echo "$SORTED_SHA_TAGS" | wc -l) total SHA tags"
+          echo "Will keep ${KEEP_COUNT} most recent tags"
+          echo "Will delete $(echo "$TAGS_TO_DELETE" | wc -l) tags"
+
+          # 删除旧标签
+          SUCCESS_COUNT=0
+          FAILED_COUNT=0
+
+          for tag in $TAGS_TO_DELETE; do
+            echo -n "Deleting tag: $tag ... "
+
+            HTTP_CODE=$(curl -s -w "%{http_code}" -X DELETE \
+              -H "Authorization: JWT ${TOKEN}" \
+              "https://hub.docker.com/v2/repositories/${DOCKERHUB_USERNAME}/${REPO_NAME}/tags/${tag}/" \
+              -o /dev/null)
+
+            if [ "$HTTP_CODE" = "204" ]; then
+              echo "OK"
+              ((SUCCESS_COUNT++))
+            else
+              echo "FAILED (HTTP $HTTP_CODE)"
+              ((FAILED_COUNT++))
+            fi
+
+            # 添加延迟避免速率限制
+            sleep 0.5
+          done
+
+          echo ""
+          echo "Cleanup completed"
+          echo "Successfully deleted: $SUCCESS_COUNT tags"
+          if [ $FAILED_COUNT -gt 0 ]; then
+            echo "Failed to delete: $FAILED_COUNT tags"
+          fi

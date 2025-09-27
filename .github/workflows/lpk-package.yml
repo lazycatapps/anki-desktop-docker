@@ -9,11 +9,10 @@ on:
     workflows: ["Build & Push (Docker Hub)"]
     types:
       - "completed"
-    branches: [ "lazycat-main" ]
 
-  # Trigger on pull requests to lazycat-main branch
-  pull_request:
-    branches: [ "lazycat-main" ]
+  # # Trigger on pull requests to lazycat-main branch
+  # pull_request:
+  #   branches: [ "lazycat-main" ]
 
   # Allow manual triggering with custom Docker image tag
   workflow_dispatch:
@@ -23,20 +22,26 @@ on:
         required: false
         default: 'lazycat-main'
         type: string
+      version:
+        description: 'Custom version for the LPK package (optional) such as 1.0.0'
+        required: false
+        default: ''
+        type: string
 
 jobs:
   build-lpk:
     runs-on: ubuntu-latest
-    # Only run if manually triggered or if the upstream Docker workflow succeeded
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    # Only run if manually triggered, pull request, or if the upstream Docker workflow succeeded
+    # Security: Only run on main repository, not forks
+    if: ${{ github.repository_owner == 'lazycatapps' && (github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')) }}
 
     steps:
       # Checkout the repository code
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          # Use current ref for manual dispatch, otherwise use the commit that triggered the upstream workflow
-          ref: ${{ github.event_name == 'workflow_dispatch' && github.ref || github.event.workflow_run.head_sha }}
+          # Use appropriate ref based on trigger type
+          ref: ${{ github.event_name == 'workflow_dispatch' && github.ref || (github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.event.workflow_run.head_sha) }}
 
       # Determine the Docker image name and tag to use
       - name: Get Docker image information
@@ -52,8 +57,13 @@ jobs:
             TAG="${{ inputs.image_tag }}"
             echo "image_tag=${TAG}" >> $GITHUB_OUTPUT
             echo "full_image=${{ secrets.DOCKERHUB_USERNAME }}/${REPO_NAME}:${TAG}" >> $GITHUB_OUTPUT
+          elif [ "${{ github.event_name }}" = "pull_request" ]; then
+            # Pull request trigger: use pull request head commit SHA as tag
+            TAG="sha-${{ github.event.pull_request.head.sha }}"
+            echo "image_tag=${TAG}" >> $GITHUB_OUTPUT
+            echo "full_image=${{ secrets.DOCKERHUB_USERNAME }}/${REPO_NAME}:${TAG}" >> $GITHUB_OUTPUT
           else
-            # Automatic trigger: use commit SHA as tag
+            # Workflow_run trigger: use commit SHA as tag
             TAG="sha-${{ github.event.workflow_run.head_sha }}"
             echo "image_tag=${TAG}" >> $GITHUB_OUTPUT
             echo "full_image=${{ secrets.DOCKERHUB_USERNAME }}/${REPO_NAME}:${TAG}" >> $GITHUB_OUTPUT
@@ -78,7 +88,7 @@ jobs:
           PASSWORD: ${{ secrets.LAZYCAT_PASSWORD }}
         run: |
           # Use expect script to handle interactive login
-          expect -f ./int.exp "$USERNAME" "$PASSWORD"
+          expect -f .github/workflows/lazycat-login.exp "$USERNAME" "$PASSWORD"
 
       # Copy Docker image from Docker Hub to Lazycat registry
       - name: Copy Docker image to Lazycat
@@ -89,7 +99,8 @@ jobs:
           lzc-cli appstore copy-image ${{ steps.docker-info.outputs.full_image }} | tee /tmp/copy_output.log
 
           # Extract the final Lazycat image URL from the command output
-          last_part=$(tail -n 1 /tmp/copy_output.log | awk '{print $NF}')
+          # Remove ANSI escape sequences using col -b and extract the last word
+          last_part=$(tail -n 1 /tmp/copy_output.log | col -b | awk '{print $NF}')
 
           # Replace image placeholder in manifest with actual Lazycat image URL
           # Use space as sed delimiter since Docker image URLs cannot contain spaces
@@ -104,14 +115,22 @@ jobs:
             # For manual triggers: use current commit SHA
             SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
             COMMIT_REF="${{ github.sha }}"
+          elif [ "${{ github.event_name }}" = "pull_request" ]; then
+            # For pull request triggers: use pull request head commit SHA
+            SHORT_SHA=$(echo "${{ github.event.pull_request.head.sha }}" | cut -c1-7)
+            COMMIT_REF="${{ github.event.pull_request.head.sha }}"
           else
-            # For automatic triggers: use the commit SHA that triggered the upstream workflow
+            # For workflow_run triggers: use the commit SHA that triggered the upstream workflow
             SHORT_SHA=$(echo "${{ github.event.workflow_run.head_sha }}" | cut -c1-7)
             COMMIT_REF="${{ github.event.workflow_run.head_sha }}"
           fi
 
-          # Check if triggered by a git tag
-          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+          # Check if custom version is provided for manual dispatch
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ inputs.version }}" ]; then
+            # Use custom version provided in manual trigger
+            VERSION="${{ inputs.version }}"
+            echo "Manual trigger with custom version: ${VERSION}"
+          elif [[ "${{ github.ref }}" == refs/tags/* ]]; then
             # Tag trigger: extract version number from tag (e.g., v0.1.2-lazycat -> 0.1.2)
             TAG_NAME="${{ github.ref_name }}"
             # Use compatible sed syntax to extract version, supports v1.2.3 or v1.2.3-suffix formats
@@ -144,6 +163,9 @@ jobs:
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             COMMIT_REF="${{ github.sha }}"
             SUBMIT_MSG="Manual Submit: ${{ inputs.image_tag }} (${COMMIT_REF})"
+          elif [ "${{ github.event_name }}" = "pull_request" ]; then
+            COMMIT_REF="${{ github.event.pull_request.head.sha }}"
+            SUBMIT_MSG="PR Submit: ${COMMIT_REF}"
           else
             COMMIT_REF="${{ github.event.workflow_run.head_sha }}"
             SUBMIT_MSG="Auto Submit: ${COMMIT_REF}"
@@ -152,8 +174,20 @@ jobs:
           # Publish the built LPK package to Lazycat App Store
           lzc-cli appstore publish ./*.lpk -c "$SUBMIT_MSG"
 
+      # Get the generated LPK filename for artifact naming
+      - name: Get LPK filename
+        id: lpk-info
+        run: |
+          LPK_FILE=$(ls ./*.lpk | head -n 1)
+          LPK_BASENAME=$(basename "$LPK_FILE" .lpk)
+          echo "lpk_file=${LPK_FILE}" >> $GITHUB_OUTPUT
+          echo "lpk_basename=${LPK_BASENAME}" >> $GITHUB_OUTPUT
+          echo "Generated LPK file: ${LPK_FILE}"
+          echo "Artifact name will be: ${LPK_BASENAME}"
+
       # Upload the built LPK file as a GitHub artifact for download
       - name: Upload LPK artifact
         uses: actions/upload-artifact@v4
         with:
-          path: ./*.lpk
+          name: ${{ steps.lpk-info.outputs.lpk_basename }}
+          path: ${{ steps.lpk-info.outputs.lpk_file }}
