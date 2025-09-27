@@ -1,5 +1,8 @@
 FROM lsiobase/kasmvnc:ubuntunoble
 
+ARG commit_id=dev
+ENV COMMIT_ID=${commit_id}
+
 # Install dependencies (fix openbox autostart error by installing python3-pyxdg)
 RUN apt-get update && \
     apt-get install -y \

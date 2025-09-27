@@ -1,0 +1,42 @@
+## License Information
+
+This repository contains code from multiple sources with different licensing terms:
+
+### Original Code
+The base project was forked from [mlcivilengineer/anki-desktop-docker](https://github.com/mlcivilengineer/anki-desktop-docker), which does not specify an explicit license. The original code's license status is undetermined.
+
+### LazyCat Apps Contributions (MIT License)
+
+The following modifications and additions by LazyCat Apps are licensed under the MIT License:
+
+- CJK font support implementation
+- Anki version upgrade to v25.09
+- Build configuration improvements
+- Documentation updates and translations
+
+**MIT License for LazyCat Apps Contributions:**
+
+Copyright (c) 2025 LazyCat Apps
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of the software contributions made by LazyCat Apps (the "Contributions"), to deal
+in the Contributions without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Contributions, and to permit persons to whom the Contributions are
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Contributions.
+
+THE CONTRIBUTIONS ARE PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE CONTRIBUTIONS OR THE USE OR OTHER DEALINGS IN THE
+CONTRIBUTIONS.
+
+### Third-Party Software
+
+- **Anki**: Licensed under AGPL3
+- **Base Docker Image**: linuxserver/docker-baseimage-kasmvnc (see their repository for license terms)
