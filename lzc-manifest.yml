@@ -3,6 +3,10 @@ package: cloud.lazycat.app.liu.anki
 # app 的版本
 version: 0.0.1
 
+name: Anki
+keyword: anki
+description: Anki 桌面客户端
+
 # 软件名称,会显示在启动器之类的地方
 locales:
   zh:
