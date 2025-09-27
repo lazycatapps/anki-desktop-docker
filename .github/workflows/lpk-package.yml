@@ -181,7 +181,7 @@ jobs:
           # Publish the built LPK package to Lazycat App Store
           # Capture output and exit code to preserve error information
           set +e  # Don't exit on error immediately
-          lzc-cli appstore publish ./*.lpk -c "$SUBMIT_MSG"
+          lzc-cli appstore publish ./*.lpk -c "$SUBMIT_MSG" | tee /tmp/publish_output.log
           PUBLISH_EXIT_CODE=$?
           set -e  # Resume exit on error
 
@@ -189,6 +189,13 @@ jobs:
             echo "❌ LPK package publish failed with exit code: $PUBLISH_EXIT_CODE"
             exit $PUBLISH_EXIT_CODE
           fi
+
+          # Check for error status codes in publish output
+          if grep -q "发布应用出错" /tmp/publish_output.log; then
+            echo "❌ LPK package publish failed: Error status code found in output"
+            exit 1
+          fi
+
           echo "✅ LPK package published successfully!"
 
       # Get the generated LPK filename for artifact naming
