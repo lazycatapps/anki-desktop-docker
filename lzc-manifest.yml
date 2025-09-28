@@ -1,7 +1,7 @@
 # app 的唯一 id,上架到商店需要保证不要冲突,尽量使用开发者自己的域名作为后缀.
 package: cloud.lazycat.app.liu.anki
 # app 的版本
-version: 0.0.1
+version: 0.0.2
 
 name: Anki
 keyword: anki
@@ -13,6 +13,8 @@ locales:
     name: Anki 客户端
     description: |
       ## Anki 桌面客户端
+
+      Anki 官方网站：https://apps.ankiweb.net/
 
       Anki‌ 是一个记忆辅助软件，它通过模仿纸质卡片的形式，帮助用户记忆和复习知识。Anki 的核心功能是基于艾宾浩斯遗忘曲线，通过科学的记忆方法帮助用户对抗遗忘，提高记忆效率。
 
@@ -61,6 +63,8 @@ locales:
     description: |
       ## Anki Desktop Client
 
+      Anki official website: https://apps.ankiweb.net/
+
       Anki is a memory aid software that helps users memorize and review knowledge by simulating the form of paper cards. Anki's core functionality is based on the Ebbinghaus forgetting curve, using scientific memory methods to help users combat forgetting and improve memory efficiency.
 
       This application provides a complete Anki desktop client environment, supporting the creation, editing and learning of cards, as well as plugin extension functionality.
@@ -107,10 +111,10 @@ locales:
 license: https://choosealicense.com/licenses/mit/
 
 # 软件的主页,会在商店等地方体现
-homepage: https://github.com/mlcivilengineer/anki-desktop-docker
+homepage: https://github.com/lazycatapps/anki-desktop-docker
 
 # lpk 的作者,会在商店等地方体现
-author: l-qing
+author: liu
 
 # application 作为一个特殊的 container 运行，对应的 service 名称为固定的`app`， 其他 service 可以通过此名称与 app 进行通讯
 application:
