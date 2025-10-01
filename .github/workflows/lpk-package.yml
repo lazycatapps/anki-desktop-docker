@@ -54,8 +54,9 @@ jobs:
             echo "image_tag=${TAG}" >> $GITHUB_OUTPUT
             echo "full_image=${{ secrets.DOCKERHUB_USERNAME }}/${REPO_NAME}:${TAG}" >> $GITHUB_OUTPUT
           elif [ "${{ github.event_name }}" = "pull_request" ]; then
-            # Pull request trigger: use pull request head commit SHA as tag
-            TAG="sha-${{ github.event.pull_request.head.sha }}"
+            # Pull request trigger: use pull request head commit short SHA (7 chars) as tag
+            SHORT_SHA=$(echo "${{ github.event.pull_request.head.sha }}" | cut -c1-7)
+            TAG="sha-${SHORT_SHA}"
             echo "image_tag=${TAG}" >> $GITHUB_OUTPUT
             echo "full_image=${{ secrets.DOCKERHUB_USERNAME }}/${REPO_NAME}:${TAG}" >> $GITHUB_OUTPUT
           elif [[ "${{ github.ref }}" == refs/tags/* ]]; then
@@ -69,8 +70,9 @@ jobs:
             echo "image_tag=${TAG}" >> $GITHUB_OUTPUT
             echo "full_image=${{ secrets.DOCKERHUB_USERNAME }}/${REPO_NAME}:${TAG}" >> $GITHUB_OUTPUT
           else
-            # Other workflow_run triggers: use commit SHA as tag
-            TAG="sha-${{ github.event.workflow_run.head_sha }}"
+            # Other workflow_run triggers: use short commit SHA (7 chars) as tag
+            SHORT_SHA=$(echo "${{ github.event.workflow_run.head_sha }}" | cut -c1-7)
+            TAG="sha-${SHORT_SHA}"
             echo "image_tag=${TAG}" >> $GITHUB_OUTPUT
             echo "full_image=${{ secrets.DOCKERHUB_USERNAME }}/${REPO_NAME}:${TAG}" >> $GITHUB_OUTPUT
           fi
