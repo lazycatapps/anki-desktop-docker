@@ -30,6 +30,8 @@ RUN apt-get update && \
     apt-get install -y \
         language-pack-zh-hans \
         fonts-noto-cjk \
+		mplayer \
+		mplayer-gui \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
